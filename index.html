@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instagram Chatbot - Swapneel Das</title>
+  <style>
+    :root {
+      --bg-color: #fafafa;
+      --chat-bg: #fff;
+      --text-color: #000;
+      --border-color: #ddd;
+      --user-bubble: #007aff;
+      --bot-bubble: #f1f1f1;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #1c1c1c;
+      --chat-bg: #2a2a2a;
+      --text-color: #fff;
+      --border-color: #444;
+      --user-bubble: #0a84ff;
+      --bot-bubble: #3a3a3a;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 0px;
+    }
+
+    #chat-container {
+      width: 100%;
+      max-width: 400px;
+      height: 100%;
+      background: var(--chat-bg);
+      border-radius: 1px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    #chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      background: var(--chat-bg);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .profile-info {
+      display: flex;
+      align-items: center;
+    }
+
+    #chat-header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .status {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .status h2 {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--text-color);
+    }
+
+    .status p {
+      font-size: 12px;
+      color: green;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+    }
+
+    .status p::before {
+      content: "●";
+      color: green;
+      margin-right: 5px;
+    }
+
+    #chat-icons {
+      display: flex;
+      align-items: center;
+    }
+
+    .chat-icon {
+      width: 5px;
+      height: 5px;
+      margin-left: 5px;
+      cursor: pointer;
+      filter: invert(20%);
+    }
+    
+    
+    
+   
+    
+    
+    
+    
+
+    [data-theme="dark"] .chat-icon {
+      filter: invert(100%);
+    }
+
+    #chatbox {
+      flex-grow: 1;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message {
+      max-width: 75%;
+      padding: 10px 14px;
+      border-radius: 18px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      word-wrap: break-word;
+    }
+
+    .user-message {
+      align-self: flex-end;
+      background: var(--user-bubble);
+      color: #fff;
+      border-bottom-right-radius: 5px;
+    }
+
+    .bot-message {
+      align-self: flex-start;
+      background: var(--bot-bubble);
+      color: var(--text-color);
+      border-bottom-left-radius: 5px;
+    }
+
+    .seen-msg, .typing-msg {
+      font-size: 12px;
+      color: gray;
+      margin-top: -5px;
+      margin-bottom: 5px;
+      text-align: right;
+    }
+
+    .typing-msg {
+      font-style: italic;
+      text-align: left;
+    }
+
+    #input-container {
+      display: flex;
+      padding: 10px;
+      background: var(--chat-bg);
+      border-top: 1px solid var(--border-color);
+    }
+
+    #question-dropdown {
+      width: 80%;
+      padding: 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      background: var(--bot-bubble);
+      font-size: 14px;
+      color: var(--text-color);
+    }
+
+    #send-btn {
+      width: 20%;
+      padding: 10px;
+      background: var(--user-bubble);
+      color: white;
+      font-size: 14px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-left: 5px;
+    }
+
+    #menu-bar {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px;
+      background: var(--chat-bg);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .menu-icon {
+      width: 24px;
+      height: 24px;
+      filter: invert(30%);
+    }
+
+    [data-theme="dark"] .menu-icon {
+      filter: invert(100%);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="chat-container">
+    <div id="chat-header">
+      <div class="profile-info">
+        <img src="img/pp.jpeg" id="profile-pic" alt="Profile Picture">
+        <div class="status">
+          <h2>swapneel_das</h2>
+          <p>Active now</p>
+        </div>
+      </div>
+      <div id="chat-icons">
+        <img src="https://img.icons8.com/ios-filled/50/phone.png" class="chat-icon">
+        <img src="https://img.icons8.com/ios-filled/50/video-call.png" class="chat-icon">
+      </div>
+    </div>
+
+    <div id="chatbox"></div>
+
+    <div id="input-container">
+      <select id="question-dropdown">
+        <option value="">Select a Question</option>
+      </select>
+      <button id="send-btn">Ask</button>
+    </div>
+
+    <div id="menu-bar">
+      <img src="https://img.icons8.com/ios-filled/50/home.png" class="menu-icon">
+      <img src="https://img.icons8.com/ios-filled/50/search.png" class="menu-icon">
+      <img src="https://img.icons8.com/ios-filled/50/plus-2-math.png" class="menu-icon">
+      <img src="https://img.icons8.com/ios-filled/50/like--v1.png" class="menu-icon">
+      <img src="https://img.icons8.com/ios-filled/50/user.png" class="menu-icon">
+    </div>
+  </div>
+
+  <script>
+    const chatbox = document.getElementById('chatbox');
+    const questionDropdown = document.getElementById('question-dropdown');
+    const sendBtn = document.getElementById('send-btn');
+
+  const qaList = {
+  "What's your name?": "My name is Swapneel Das.",
+  "How old are you?": "I am 19 years old.",
+  "What is your educational qualification?": "I'm a student at B.A. (honours) Department of English",
+  "What do you do?": "I am a student, also a full-stack web developer and a trader.",
+  "Where do you live?": "I live in Sunamganj.",
+  "What is your Motherland?": "I am from Bangladesh.",
+  "What is your Facebook Profile?": "My Facebook Profile name is Swapneel Das. If you can't find the real one try this: www.facebook.com/swapneeldas.account",
+  "What is your Instagram username?": "My Instagram username is @swapneel_das.",
+  "What is your Twitter/X username?": "My Twitter/X username is @swapneel_das__.",
+  "What is your GitHub username?": "My GitHub username is AlgoNeel.",
+  
+  "What’s your favorite color?": "My favorite color is black and white.",
+  "What’s your favorite food?": "I love home made Biriyani.",
+  "Do you like to watch movies?": "Yes, I enjoy watching movies.",
+  "What’s your favorite TV show?": "My favorite TV show is Peaky Blinders.",
+  "Do you have any pets?": "Yes, I have a bird, it is able to talk.",
+  "Do you like reading books?": "Yes, I enjoy reading books.",
+  "What kind of music do you like?": "I like listening to pop and rock music.",
+  "Do you play any sports?": "I like playing cricket and badminton.",
+  "Do you like to travel?": "Yes, I love traveling to new places.",
+  "What’s your favorite place to visit?": "My favorite place to visit is Jaflong.",
+  "What’s your favorite season?": "I prefer winter season.",
+  "Do you like coffee or tea?": "I prefer coffee.",
+  "What’s your favorite hobby?": "My favorite hobby is coding and trading.",
+  "Do you prefer the beach or the mountains?": "I prefer the mountains.",
+  "Are you an early riser or a night owl?": "I am a night owl.",
+  "Do you like video games?": "I enjoy playing video games occasionally. I like GTA V, Class of Clan, Call of Duty.",
+  "What’s your favorite movie?": "My favorite movie is Avatar.",
+  "Do you like cooking?": "Yes, I enjoy cooking sometimes. It is one of my hobbies.",
+  "Do you like to stay active?": "Yes, I like to stay active and exercise regularly.",
+  "What’s your favorite holiday?": "My favorite holiday is Durga Puja.",
+  "What’s your favorite ice cream flavor?": "I love chocolate ice cream.",
+  "Do you have a favorite book?": "My favorite book is 'Atomic Habits'.",
+  "Do you like dogs or cats more?": "I like dogs more.",
+  "What’s your favorite thing to do on weekends?": "I like to relax and catch up on coding on weekends.",
+  "Are you a morning person?": "No, I’m a night owl.",
+  "Do you like shopping?": "Nope, I don't like this.",
+  "Do you like to stay at home or go out more?": "I like staying at home more.",
+  "Do you like texting or calling?": "I prefer texting over calling.",
+  "Do you like singing in the shower?": "Sometimes I do, but I’m not a good singer.",
+  "What’s your favorite thing to do with friends?": "I enjoy hanging out and playing games with my friends.",
+  "What’s your favorite sport to watch?": "I love watching cricket and football. Most of the time I watch football.",
+  "What’s your dream vacation destination?": "My dream vacation is to visit Switzerland.",
+  "What’s your favorite way to relax?": "I like to relax by listening to music or reading a book.",
+  "Do you like surprises?": "Yes, I enjoy surprises.",
+  "Do you have a favorite childhood memory?": "My favorite childhood memory is sending a text message via my elder brother's Facebook account to his friend 'I am Sajeeb Boom Boom' in 2013. Hahahaha.",
+  "Do you like going to the movies or staying in?": "I prefer staying in and watching movies at home.",
+  "Do you like taking pictures?": "Yes, I like capturing memories with pictures.",
+  "Do you enjoy going for walks?": "Yes, I enjoy going for walks in the evenings. But alone.",
+  "Are you into any kind of art or crafts?": "I enjoy graphic design.",
+  "What’s something you’re really good at?": "I’m really good at coding and problem-solving.",
+  "What’s your favorite thing to do on weekends?": "I like to spend my weekends learning new skills or trading."
+};
+
+
+
+    Object.keys(qaList).forEach(q => {
+      const option = document.createElement("option");
+      option.value = q;
+      option.textContent = q;
+      questionDropdown.appendChild(option);
+    });
+
+    sendBtn.addEventListener('click', () => {
+      const selectedQuestion = questionDropdown.value;
+      if (!selectedQuestion) return;
+
+      chatbox.innerHTML += `<div class="message user-message">${selectedQuestion}</div>`;
+
+      setTimeout(() => {
+        chatbox.innerHTML += `<div class="seen-msg">Seen just now</div>`;
+        setTimeout(() => {
+          chatbox.innerHTML += `<div class="typing-msg">Typing...</div>`;
+          setTimeout(() => {
+            document.querySelector('.typing-msg').remove();
+            chatbox.innerHTML += `<div class="message bot-message">${qaList[selectedQuestion]}</div>`;
+          }, 500);
+        }, 500);
+      }, 500);
+    });
+  </script>
+
+</body>
+</html>
