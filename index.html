@@ -251,11 +251,11 @@
   </div>
 
   <script>
-    const chatbox = document.getElementById('chatbox');
-    const questionDropdown = document.getElementById('question-dropdown');
-    const sendBtn = document.getElementById('send-btn');
+     const chatbox = document.getElementById('chatbox');
+const questionDropdown = document.getElementById('question-dropdown');
+const sendBtn = document.getElementById('send-btn');
 
-  const qaList = {
+const qaList = {
   "What's your name?": "My name is Swapneel Das.",
   "How old are you?": "I am 19 years old.",
   "What is your educational qualification?": "I'm a student at B.A. (honours) Department of English",
@@ -266,7 +266,6 @@
   "What is your Instagram username?": "My Instagram username is @swapneel_das.",
   "What is your Twitter/X username?": "My Twitter/X username is @swapneel_das__.",
   "What is your GitHub username?": "My GitHub username is AlgoNeel.",
-  
   "What’s your favorite color?": "My favorite color is black and white.",
   "What’s your favorite food?": "I love home made Biriyani.",
   "Do you like to watch movies?": "Yes, I enjoy watching movies.",
@@ -310,32 +309,38 @@
   "What’s your favorite thing to do on weekends?": "I like to spend my weekends learning new skills or trading."
 };
 
+Object.keys(qaList).forEach(q => {
+  const option = document.createElement("option");
+  option.value = q;
+  option.textContent = q;
+  questionDropdown.appendChild(option);
+});
 
+sendBtn.addEventListener('click', () => {
+  const selectedQuestion = questionDropdown.value;
+  if (!selectedQuestion) return;
 
-    Object.keys(qaList).forEach(q => {
-      const option = document.createElement("option");
-      option.value = q;
-      option.textContent = q;
-      questionDropdown.appendChild(option);
-    });
+  // Add the user's message
+  chatbox.innerHTML += `<div class="message user-message">${selectedQuestion}</div>`;
 
-    sendBtn.addEventListener('click', () => {
-      const selectedQuestion = questionDropdown.value;
-      if (!selectedQuestion) return;
+  // Remove any existing "Seen just now" messages
+  const previousSeenMsg = document.querySelector('.seen-msg');
+  if (previousSeenMsg) {
+    previousSeenMsg.remove();
+  }
 
-      chatbox.innerHTML += `<div class="message user-message">${selectedQuestion}</div>`;
-
+  // Display the new "Seen just now" message
+  setTimeout(() => {
+    chatbox.innerHTML += `<div class="seen-msg">Seen just now</div>`;
+    setTimeout(() => {
+      chatbox.innerHTML += `<div class="typing-msg">Typing...</div>`;
       setTimeout(() => {
-        chatbox.innerHTML += `<div class="seen-msg">Seen just now</div>`;
-        setTimeout(() => {
-          chatbox.innerHTML += `<div class="typing-msg">Typing...</div>`;
-          setTimeout(() => {
-            document.querySelector('.typing-msg').remove();
-            chatbox.innerHTML += `<div class="message bot-message">${qaList[selectedQuestion]}</div>`;
-          }, 500);
-        }, 500);
+        document.querySelector('.typing-msg').remove();
+        chatbox.innerHTML += `<div class="message bot-message">${qaList[selectedQuestion]}</div>`;
       }, 500);
-    });
+    }, 500);
+  }, 500);
+});
   </script>
 
 </body>
